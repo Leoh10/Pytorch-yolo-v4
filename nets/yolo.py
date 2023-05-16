@@ -26,6 +26,7 @@ class SpatialPyramidPooling(nn.Module):
 
     def forward(self, x):
         features = [maxpool(x) for maxpool in self.maxpools[::-1]]
+    #   maxpools[::-1]的作用是将三个层的顺序反过来，让核为13的层排在最前面   
         features = torch.cat(features + [x], dim=1)
 
         return features
@@ -38,8 +39,9 @@ class Upsample(nn.Module):
         super(Upsample, self).__init__()
 
         self.upsample = nn.Sequential(
-            conv2d(in_channels, out_channels, 1),
-            nn.Upsample(scale_factor=2, mode='nearest')
+            conv2d(in_channels, out_channels, 1),#第一步1*1卷积调整通道数
+
+            nn.Upsample(scale_factor=2, mode='nearest')#最近邻插值
         )
 
     def forward(self, x,):
@@ -71,7 +73,9 @@ def make_five_conv(filters_list, in_filters):
     return m
 
 #---------------------------------------------------#
-#   最后获得yolov4的输出
+#   最后获得yolov4的输出---模型输出
+#   第一个卷积使前面自定义的那个，它包含一个3x3卷积层，一个批规范化和一个激活函数。
+#   第二个是1x1卷积。
 #---------------------------------------------------#
 def yolo_head(filters_list, in_filters):
     m = nn.Sequential(
@@ -81,7 +85,7 @@ def yolo_head(filters_list, in_filters):
     return m
 
 #---------------------------------------------------#
-#   yolo_body
+#   yolo_body--------------
 #---------------------------------------------------#
 class YoloBody(nn.Module):
     def __init__(self, anchors_mask, num_classes, pretrained = False):

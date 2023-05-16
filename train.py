@@ -122,6 +122,13 @@ if __name__ == "__main__":
     #
     #   余弦退火算法的参数放到下面的lr_decay_type中设置
     #------------------------------------------------------------------#
+    # ------------------------------------------------------#
+    #   Yolov4的tricks应用
+    #   mosaic 马赛克数据增强 True or False
+    #   实际测试时mosaic数据增强并不稳定，所以默认为False
+    #   Cosine_lr 余弦退火学习率 True or False
+    #   label_smoothing 标签平滑 0.01以下一般 如0.01、0.005
+    # ------------------------------------------------------#
     mosaic              = True
     mosaic_prob         = 0.5
     mixup               = True
@@ -320,7 +327,7 @@ if __name__ == "__main__":
         if local_rank == 0:
             print("\nSuccessful Load Key:", str(load_key)[:500], "……\nSuccessful Load Key Num:", len(load_key))
             print("\nFail To Load Key:", str(no_load_key)[:500], "……\nFail To Load Key num:", len(no_load_key))
-            print("\n\033[1;33;44m温馨提示，head部分没有载入是正常现象，Backbone部分没有载入是错误的。\033[0m")
+            print("\n\033[1;33;44m温馨提示,head部分没有载入是正常现象,Backbone部分没有载入是错误的。\033[0m")
 
     #----------------------#
     #   获得损失函数
